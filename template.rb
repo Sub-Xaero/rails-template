@@ -29,6 +29,8 @@ after_bundle do
   
   generate('devise:install')
   generate('devise', "Admin::User")
+  gsub_file "config/routes.rb", 'devise_for :users, class_name: "Admin::User"', 'devise_for :admin_users, class_name: "Admin::User"'
+  generate('devise', "User")
 
   run "yarn add bootstrap@next @popperjs/core@latest chokidar stimulus-library"
   insert_into_file "config/webpack/development.js", before: /^module\.exports\s\=\senvironment\.toWebpackConfig\(\)/ do 
@@ -218,17 +220,14 @@ docker-services: docker-compose up
 
   insert_into_file "app/channels/application_cable/connection.rb", after: 'class Connection < ActionCable::Connection::Base' do
     <<-CODE
-    identified_by :current_admin_user
-    # identified_by :current_user, :current_admin_user
+    identified_by :current_user, :current_admin_user
 
     def connect
-      # self.current_user = find_verified_user
+      self.current_user = find_verified_user
       self.current_admin_user = find_verified_admin_user
-      reject_unauthorized_connection if current_admin_user.blank?
-      # reject_unauthorized_connection if current_admin_user.blank? && current_user.blank?
+      reject_unauthorized_connection if current_admin_user.blank? && current_user.blank?
 
-      logger.add_tags "ActionCable", current_admin_user.email
-      # logger.add_tags "ActionCable", (current_admin_user || current_user).email
+      logger.add_tags "ActionCable", (current_admin_user || current_user).email
     end
 
     protected
