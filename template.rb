@@ -183,4 +183,32 @@ end
   CODE
 
 
+  create_file "docker-compose.yml" do
+    <<-CODE
+version: '3.4'
+
+services:
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
+
+
+volumes:
+  redis:
+    CODE
+  end
+
+
+  create_file "Procfile" do
+    <<-CODE
+web: bundle exec rails server -p $PORT
+webpack-dev-server: bin/webpack-dev-server
+docker-services: docker-compose up
+    CODE
+  end
+
 end
