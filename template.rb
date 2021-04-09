@@ -28,7 +28,6 @@ after_bundle do
   generate('simple_form:install:bootstrap')
   
   generate('devise:install')
-  generate('devise', "User")
   generate('devise', "Admin::User")
 
   run "yarn add bootstrap@next @popperjs/core@latest chokidar stimulus-library"
@@ -219,15 +218,17 @@ docker-services: docker-compose up
 
   insert_into_file "app/channels/application_cable/connection.rb", after: 'class Connection < ActionCable::Connection::Base' do
     <<-CODE
-    identified_by :current_user, :current_admin_user
+    identified_by :current_admin_user
+    # identified_by :current_user, :current_admin_user
 
     def connect
-      self.current_user = find_verified_user
+      # self.current_user = find_verified_user
       self.current_admin_user = find_verified_admin_user
-      reject_unauthorized_connection if current_admin_user.blank? && current_user.blank?
+      reject_unauthorized_connection if current_admin_user.blank?
+      # reject_unauthorized_connection if current_admin_user.blank? && current_user.blank?
 
-      logger.add_tags "ActionCable", (current_admin_user || current_user).email
-      logger.add_tags "Logged in as \#{current_user.email}" if current_admin_user.present? && current_user.present?
+      logger.add_tags "ActionCable", current_admin_user.email
+      # logger.add_tags "ActionCable", (current_admin_user || current_user).email
     end
 
     protected
