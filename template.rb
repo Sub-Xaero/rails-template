@@ -5,6 +5,7 @@ gem 'rack-cors'
 gem 'devise'
 gem 'simple_form'
 gem 'hotwire-rails'
+gem 'sidekiq'
 
 gem_group :development do
   gem "better_errors"
@@ -13,6 +14,8 @@ end
 # Remove unwanted default gems
 gsub_file "Gemfile", /^# Use SCSS for stylesheets*$/,''
 gsub_file "Gemfile", /^gem\s+["']sass-rails["'].*$/,''
+
+environment "config.active_job.queue_adapter = :sidekiq"
 
 after_bundle do 
   run "yarn install"
