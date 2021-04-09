@@ -21,11 +21,15 @@ gsub_file "Gemfile", /^# gem 'bcrypt'.*$/, "gem 'bcrypt'"
 environment "config.active_job.queue_adapter = :sidekiq"
 
 after_bundle do 
+  run "bundle install"
   run "yarn install"
 
   rails_command('turbo:install')
   generate('simple_form:install:bootstrap')
+  
   generate('devise:install')
+  generate('devise', "User")
+  generate('devise', "Admin::User")
 
   run "yarn add bootstrap@next @popperjs/core@latest chokidar stimulus-library"
   insert_into_file "config/webpack/development.js", before: /^module\.exports\s\=\senvironment\.toWebpackConfig\(\)/ do 
@@ -208,6 +212,38 @@ volumes:
 web: bundle exec rails server -p $PORT
 webpack-dev-server: bin/webpack-dev-server
 docker-services: docker-compose up
+    CODE
+  end
+
+
+
+  insert_into_file "app/channels/application_cable/connection.rb", after: 'class Connection < ActionCable::Connection::Base' do
+    <<-CODE
+    identified_by :current_user, :current_admin_user
+
+    def connect
+      self.current_user = find_verified_user
+      self.current_admin_user = find_verified_admin_user
+      reject_unauthorized_connection if current_admin_user.blank? && current_user.blank?
+
+      logger.add_tags "ActionCable", (current_admin_user || current_user).email
+      logger.add_tags "Logged in as \#{current_user.email}" if current_admin_user.present? && current_user.present?
+    end
+
+    protected
+
+    # this checks whether a user is authenticated with devise
+    def find_verified_user
+      env["warden"].user(:user)
+    rescue
+      nil
+    end
+
+    def find_verified_admin_user
+      env["warden"].user(:admin_user)
+    rescue
+      nil
+    end
     CODE
   end
 
