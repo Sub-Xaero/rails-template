@@ -34,6 +34,7 @@ after_bundle do
     'app/views/**/*.erb',
     'app/views/**/*.haml',
     'app/views/**/*.slim',
+    'app/helpers/**/*.rb',
   ]).on('change', () => server.sockWrite(server.sockets, 'content-changed'))
   }
 
