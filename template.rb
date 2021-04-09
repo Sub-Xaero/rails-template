@@ -12,8 +12,11 @@ gem_group :development do
 end
 
 # Remove unwanted default gems
-gsub_file "Gemfile", /^# Use SCSS for stylesheets*$/,''
+gsub_file "Gemfile", /^# Use SCSS for stylesheets*$/, ''
 gsub_file "Gemfile", /^gem\s+["']sass-rails["'].*$/,''
+gsub_file "Gemfile", /^# gem 'redis'.*$/, "gem 'redis'"
+gsub_file "Gemfile", /^# gem 'image_processing'.*$/, "gem 'image_processing'"
+gsub_file "Gemfile", /^# gem 'bcrypt'.*$/, "gem 'bcrypt'"
 
 environment "config.active_job.queue_adapter = :sidekiq"
 
