@@ -124,8 +124,7 @@ after_bundle do
     TASK
   end
 
-
-  # generate(:controller, "Public index")
+  generate(:controller, "Public index")
   route "root to: 'public#index'"
 
   create_file "app/helpers/layout_helper.rb" do
