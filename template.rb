@@ -6,6 +6,7 @@ gem 'devise'
 gem 'simple_form'
 gem 'hotwire-rails'
 gem 'sidekiq'
+gem "view_component", require: "view_component/engine"
 
 gem_group :development do
   gem "better_errors"
@@ -41,8 +42,10 @@ after_bundle do
     'config/locales/*.yml',
     'app/views/**/*.erb',
     'app/views/**/*.haml',
-    'app/views/**/*.slim',
     'app/helpers/**/*.rb',
+    'app/components/**/*.rb',
+    'app/components/**/*.erb',
+    'app/components/**/*.haml',
   ]).on('change', () => server.sockWrite(server.sockets, 'content-changed'))
   }
 
