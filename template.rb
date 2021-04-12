@@ -220,11 +220,17 @@ volumes:
   end
 
 
-  create_file "Procfile" do
+  create_file "Procfile.dev" do
     <<-CODE
 web: bundle exec rails server -p $PORT
 webpack-dev-server: bin/webpack-dev-server
 docker-services: docker-compose up
+    CODE
+  end
+
+  create_file ".foreman" do
+    <<-CODE
+procfile: Procfile.dev
     CODE
   end
 
