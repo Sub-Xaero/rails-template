@@ -56,8 +56,8 @@ after_bundle do
   run "rm -rf app/javascript"
   
   append_to_file "app/assets/packs/application.js", <<-CODE
-  import "bootstrap"'
-  import "bootstrap/dist/css/bootstrap.min.css"
+  import "bootstrap";
+  import "bootstrap/dist/css/bootstrap.min.css";
   CODE
 
   environment <<-CONFIG
