@@ -127,7 +127,6 @@ after_bundle do
 
   append_to_file "app/assets/packs/application.js", <<-CODE
   import "bootstrap";
-  import "bootstrap/dist/css/bootstrap.min.css";
   import "../stylesheets/application.scss";
   CODE
 
