@@ -1,3 +1,5 @@
+dirname = File.basename(Dir.getwd)
+
 #  Ignore IDE Files
 run "echo /.idea > .gitignore"
 
@@ -7,6 +9,10 @@ gem 'simple_form'
 gem 'hotwire-rails'
 gem 'sidekiq'
 gem "view_component", require: "view_component/engine"
+
+gem_group :development, :test do
+  gem 'dotenv-rails'
+end
 
 gem_group :development do
   gem "better_errors"
@@ -237,7 +243,12 @@ procfile: Procfile.dev
     CODE
   end
 
-
+  create_file ".env.local" do
+    <<-CODE
+HOST=localhost:3000
+DATABASE_URL=postgres://#{dirname}:oiverb@localhost:5432
+    CODE
+  end
 
   insert_into_file "app/channels/application_cable/connection.rb", after: 'class Connection < ActionCable::Connection::Base' do
     <<-CODE
