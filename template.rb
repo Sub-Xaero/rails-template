@@ -20,27 +20,27 @@ end
 
 # Remove unwanted default gems
 gsub_file "Gemfile", /^# Use SCSS for stylesheets*$/, ''
-gsub_file "Gemfile", /^gem\s+["']sass-rails["'].*$/,''
+gsub_file "Gemfile", /^gem\s+["']sass-rails["'].*$/, ''
 gsub_file "Gemfile", /^# gem 'redis'.*$/, "gem 'redis'"
 gsub_file "Gemfile", /^# gem 'image_processing'.*$/, "gem 'image_processing'"
 gsub_file "Gemfile", /^# gem 'bcrypt'.*$/, "gem 'bcrypt'"
 
 environment "config.active_job.queue_adapter = :sidekiq"
 
-after_bundle do 
+after_bundle do
   run "bundle install"
   run "yarn install"
 
   rails_command('turbo:install')
   generate('simple_form:install:bootstrap')
-  
+
   generate('devise:install')
   generate('devise', "Admin::User")
   gsub_file "config/routes.rb", 'devise_for :users, class_name: "Admin::User"', 'devise_for :admin_users, class_name: "Admin::User"'
   generate('devise', "User")
 
   run "yarn add bootstrap@next @popperjs/core@latest chokidar stimulus-library"
-  insert_into_file "config/webpack/development.js", before: /^module\.exports\s\=\senvironment\.toWebpackConfig\(\)/ do 
+  insert_into_file "config/webpack/development.js", before: /^module\.exports\s\=\senvironment\.toWebpackConfig\(\)/ do
     <<-CODE
   const chokidar = require('chokidar')
   environment.config.devServer.before = (app, server) => {
@@ -57,13 +57,13 @@ after_bundle do
 
     CODE
   end
-  
+
   gsub_file 'config/webpacker.yml', /^(\s+source_path\:\s)app\/javascript/, '\1app/assets'
   gsub_file 'config/webpacker.yml', /^(\s+)hmr\:\sfalse/, '\1hmr: true'
-  
+
   run "mv app/javascript/* app/assets/"
   run "rm -rf app/javascript"
-  
+
   append_to_file "app/assets/packs/application.js", <<-CODE
   import "bootstrap";
   import "bootstrap/dist/css/bootstrap.min.css";
@@ -158,7 +158,7 @@ after_bundle do
   route "root to: 'public#index'"
 
   create_file "app/helpers/layout_helper.rb" do
-  <<-CODE
+    <<-CODE
   module LayoutHelper
 
     def standard_page_layout
@@ -173,12 +173,11 @@ after_bundle do
     end
 
   end
-  CODE
+    CODE
   end
 
-  gsub_file 'app/views/layouts/application.html.erb' , "stylesheet_link_tag", "stylesheet_pack_tag"
-  gsub_file 'app/views/layouts/application.html.erb' , "data-turbolinks-track", "data-turbo-track"
-
+  gsub_file 'app/views/layouts/application.html.erb', "stylesheet_link_tag", "stylesheet_pack_tag"
+  gsub_file 'app/views/layouts/application.html.erb', "data-turbolinks-track", "data-turbo-track"
 
   # Config Devise for Turbo
   gsub_file "config/initializers/devise.rb", '# frozen_string_literal: true', ''
@@ -207,7 +206,6 @@ end
     manager.failure_app = TurboFailureApp
   end
   CODE
-
 
   create_file "docker-compose.yml" do
     <<-CODE
