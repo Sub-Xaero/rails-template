@@ -2,6 +2,8 @@ dirname = File.basename(Dir.getwd)
 
 #  Ignore IDE Files
 run "echo /.idea > .gitignore"
+# Ignore dev ssl certs
+run "echo /config/certs > .gitignore"
 
 gem 'rack-cors'
 gem 'devise'
@@ -197,6 +199,27 @@ class TurboFailureApp < Devise::FailureApp
 end
   CODE
 
+  create_file 'app/controllers/turbo_controller.rb', <<-CODE
+class TurboController < ApplicationController
+  class Responder < ActionController::Responder
+    def to_turbo_stream
+      controller.render(options.merge(formats: :html))
+    rescue ActionView::MissingTemplate => error
+      if get?
+        raise error
+      elsif has_errors? && default_action
+        render rendering_options.merge(formats: :html, status: :unprocessable_entity)
+      else
+        redirect_to navigation_location, status: :see_other
+      end
+    end
+  end
+
+  self.responder = Responder
+  respond_to :html, :turbo_stream
+end
+  CODE
+
   gsub_file "config/initializers/devise.rb", "# config.parent_controller = 'DeviseController'", "config.parent_controller = 'TurboController'"
   gsub_file "config/initializers/devise.rb", "# config.navigational_formats = ['*/*', :html]", "config.navigational_formats = ['*/*', :html, :turbo_stream]"
   gsub_file "config/initializers/devise.rb", /config\.warden do.*?end/, <<-CODE
@@ -226,10 +249,17 @@ volumes:
     CODE
   end
 
+  # Generate SSL certificates for localhost
+  inside('config') do
+    empty_directory('certs')
+    inside('certs') do
+      run('minica -domains localhost')
+    end
+  end
 
   create_file "Procfile.dev" do
     <<-CODE
-web: bundle exec rails server -p $PORT
+web: shutup && bundle exec rails server -p 3000 -b "ssl://0.0.0.0:3000?key=./config/certs/localhost/key.pem&cert=./config/certs/localhost/cert.pem"
 webpack-dev-server: bin/webpack-dev-server
 docker-services: docker-compose up
     CODE
