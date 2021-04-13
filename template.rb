@@ -295,6 +295,19 @@ version: '3.4'
 
 services:
 
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - PSQL_HISTFILE=/root/log/.psql_history
+      - POSTGRES_USER=#{dirname}
+      - POSTGRES_PASSWORD=oiverb
+      - POSTGRES_DB=#{dirname}_development
+    ports:
+      - '5432:5432'
+
   redis:
     image: redis:latest
     volumes:
@@ -304,6 +317,7 @@ services:
 
 
 volumes:
+  postgres:
   redis:
     CODE
   end
