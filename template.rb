@@ -65,10 +65,70 @@ after_bundle do
 
   run "mv app/javascript/* app/assets/"
   run "rm -rf app/javascript"
+  run "rm app/assets/stylesheets/application.css"
+
+  inside('app/assets/stylesheets') do
+    empty_directory('config')
+    create_file "application.scss" do
+      <<-CODE
+      @import "./config/bootstrap";
+      CODE
+    end
+    inside('config') do
+      create_file "bootstrap.scss" do
+        <<-CODE
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+
+// Layout & components
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/accordion";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/offcanvas";
+
+// Helpers
+@import "~bootstrap/scss/helpers";
+
+// Utilities
+@import "~bootstrap/scss/utilities/api";
+        CODE
+      end
+    end
+  end
+
 
   append_to_file "app/assets/packs/application.js", <<-CODE
   import "bootstrap";
   import "bootstrap/dist/css/bootstrap.min.css";
+  import "../stylesheets/application.scss";
   CODE
 
   environment <<-CONFIG
@@ -306,5 +366,5 @@ DATABASE_URL=postgres://#{dirname}:oiverb@localhost:5432
     end
     CODE
   end
-
+  generate('webpacker:install:stimulus')
 end
