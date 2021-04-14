@@ -34,7 +34,7 @@ gsub_file "Gemfile", /^# gem 'bcrypt'.*$/, "gem 'bcrypt'"
 environment "config.active_job.queue_adapter = :sidekiq"
 
 run "rvm gemset create #{app_name}"
-run "rvm gemset use #{app_name}"
+run "echo '#{app_name}' > .ruby-gemset"
 
 after_bundle do
   run "bundle install"
