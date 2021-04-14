@@ -47,6 +47,7 @@ after_bundle do
   generate('devise', "Admin::User")
   gsub_file "config/routes.rb", 'devise_for :users, class_name: "Admin::User"', 'devise_for :admin_users, class_name: "Admin::User"'
   generate('devise', "User")
+  rails_command('webpacker:install:stimulus')
 
   run "yarn add bootstrap@next @popperjs/core@latest chokidar stimulus-library"
   insert_into_file "config/webpack/development.js", before: /^module\.exports\s\=\senvironment\.toWebpackConfig\(\)/ do
