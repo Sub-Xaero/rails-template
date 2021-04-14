@@ -1,0 +1,2 @@
+namespace :integrity do
+end

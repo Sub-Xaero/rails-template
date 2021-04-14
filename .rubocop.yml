@@ -1,0 +1,107 @@
+require:
+  - rubocop-rails
+
+AllCops:
+  TargetRailsVersion: 6.1
+  Exclude:
+    - 'db/**/*.rb'
+
+Rails:
+  Enabled: true
+
+Style/SymbolArray:
+  Enabled: false
+
+Layout/ClassStructure:
+  Enabled: true
+  Categories:
+    association:
+      - belongs_to
+      - has_many
+      - has_one
+    attribute_macros:
+      - attr_accessor
+      - attr_reader
+      - attr_writer
+      - store_accessor
+      - store_reader
+      - store_writer
+    macros:
+      - validates
+      - validate
+    module_inclusion:
+      - include
+      - prepend
+      - extend
+  ExpectedOrder:
+    - constants
+    - module_inclusion
+    - public_attribute_macros
+    - macros
+    - association
+    - public_delegate
+    - public_class_methods
+    - initializer
+    - public_methods
+    - protected_attribute_macros
+    - protected_methods
+    - private_attribute_macros
+    - private_delegate
+    - private_methods
+
+Layout/LineLength:
+  Max: 250
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: true
+  EnforcedStyle: empty_lines_except_namespace
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: true
+  EnforcedStyle: empty_lines_except_namespace
+
+Layout/EndOfLine:
+  Enabled: true
+  EnforcedStyle: lf
+
+Style/WordArray:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/EmptyMethod:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArguments:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Layout/SpaceInsidePercentLiteralDelimiters:
+  Enabled: false
+
+Layout/MultilineArrayLineBreaks:
+  Enabled: true
+
+Layout/MultilineHashKeyLineBreaks:
+  Enabled: true
+
+Layout/MultilineMethodArgumentLineBreaks:
+  Enabled: true
