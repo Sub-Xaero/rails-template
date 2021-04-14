@@ -41,7 +41,7 @@ after_bundle do
   run "yarn install"
 
   rails_command('turbo:install')
-  generate('simple_form:install:bootstrap')
+  generate('simple_form:install --bootstrap')
 
   generate('devise:install')
   generate('devise', "Admin::User")
