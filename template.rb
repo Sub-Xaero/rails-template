@@ -71,6 +71,7 @@ after_bundle do
 
   gsub_file 'config/webpacker.yml', /^(\s+source_path\:\s)app\/javascript/, '\1app/assets'
   gsub_file 'config/webpacker.yml', /^(\s+)hmr\:\sfalse/, '\1hmr: true'
+  gsub_file 'config/webpacker.yml', /^(\s+)https\:\sfalse/, '\1https: true'
 
   run "mv app/javascript/* app/assets/"
   run "rm -rf app/javascript"
