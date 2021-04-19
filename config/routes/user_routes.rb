@@ -8,4 +8,3 @@ module UserRoutes
     end
   end
 end
-end
