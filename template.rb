@@ -6,8 +6,8 @@ end
 app_name = File.basename(Dir.getwd)
 underscore_app_name = app_name.gsub("-", "_")
 
-append_to_file ".gitignore", "/.idea" #  Ignore IDE Files
-append_to_file ".gitignore", "/config/certs" # Ignore dev ssl certs
+append_to_file ".gitignore", "/.idea\n" #  Ignore IDE Files
+append_to_file ".gitignore", "/config/certs\n" # Ignore dev ssl certs
 
 gem 'rack-cors'
 gem 'brakeman'
