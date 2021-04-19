@@ -5,12 +5,17 @@ AllCops:
   TargetRailsVersion: 6.1
   Exclude:
     - 'db/**/*.rb'
+    - 'node_modules/**/*.rb'
+    - 'node_modules/**/*.spec'
 
 Rails:
   Enabled: true
 
 Style/SymbolArray:
   Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
 
 Layout/ClassStructure:
   Enabled: true
