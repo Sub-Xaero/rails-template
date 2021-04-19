@@ -10,6 +10,7 @@ append_to_file ".gitignore", "/.idea" #  Ignore IDE Files
 append_to_file ".gitignore", "/config/certs" # Ignore dev ssl certs
 
 gem 'rack-cors'
+gem 'brakeman'
 gem 'devise'
 gem 'simple_form'
 gem 'hotwire-rails'
