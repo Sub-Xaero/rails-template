@@ -202,8 +202,9 @@ HOST=localhost:3000
 DATABASE_URL=postgres://#{app_name}:oiverb@localhost:5432
     CODE
   end
-
   remove_file "app/channels/application_cable/connection.rb"
   copy_file "app/channels/application_cable/connection.rb"
+
+  run "gem install shutup foreman"
 
 end
