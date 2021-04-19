@@ -120,9 +120,10 @@ after_bundle do
   copy_file "lib/tasks/scheduled.rake"
   copy_file "lib/tasks/release.rake"
   copy_file "app/helpers/layout_helper.rb"
-
+  
   gsub_file 'app/views/layouts/application.html.erb', "stylesheet_link_tag", "stylesheet_pack_tag"
   gsub_file 'app/views/layouts/application.html.erb', "data-turbolinks-track", "data-turbo-track"
+  copy_folder "app/views/devise"
 
   # Config Devise for Turbo
   gsub_file "config/initializers/devise.rb", '# frozen_string_literal: true', ''

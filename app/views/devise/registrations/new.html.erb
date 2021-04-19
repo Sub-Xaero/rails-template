@@ -1,0 +1,17 @@
+<%= auth_page_layout do %>
+  <%= page_title('Sign up') %>
+
+  <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+
+    <%= f.input :email, input_html: { class: 'mb-4', autofocus: true, autocomplete: "email" } %>
+    <%= f.input :password, input_html: { class: 'mb-4', autocomplete: "new-password" } %>
+    <%= f.input :password_confirmation, input_html: { class: 'mb-4', autocomplete: "new-password" } %>
+
+    <div class="my-4">
+      <%= f.submit "Sign up", class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+
+  <%= render "devise/shared/links" %>
+<% end %>

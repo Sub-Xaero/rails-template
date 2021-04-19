@@ -1,0 +1,18 @@
+<%= auth_page_layout do %>
+  <%= page_title('Log in') %>
+
+  <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <%= f.input :email, input_html: { class: 'mb-4', autofocus: true, autocomplete: "email" } %>
+    <%= f.input :password, input_html: { class: 'mb-4', autocomplete: "current-password" } %>
+
+    <% if devise_mapping.rememberable? %>
+      <%= f.input :remember_me, as: :boolean %>
+    <% end %>
+
+    <div class="my-4">
+      <%= f.submit "Log in", class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+
+  <%= render "devise/shared/links" %>
+<% end %>
