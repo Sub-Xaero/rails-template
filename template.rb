@@ -15,8 +15,9 @@ gem 'devise'
 gem 'simple_form'
 gem 'hotwire-rails'
 gem 'sidekiq'
-gem 'rubocop'
-gem 'rubocop-rails'
+gem 'rubocop', require: false
+gem 'rubocop-rails', require: false
+gem 'rubocop-performance', require: false
 gem "view_component", require: "view_component/engine"
 gem_group :development, :test do
   gem 'dotenv-rails'
