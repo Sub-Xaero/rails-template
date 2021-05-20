@@ -79,12 +79,12 @@ after_bundle do
   run "rm -rf app/javascript"
   run "rm -rf app/assets/stylesheets"
 
-  copy_folder "app/assets/stylesheets"
+  directory "app/assets/stylesheets", "app/assets/stylesheets"
   # empty_directory('app/assets/stylesheets/config')
   # copy_file "app/assets/stylesheets/application.scss"
   # copy_file "app/assets/stylesheets/config/bootstrap.scss"
   
-  # copy_folder "app/assets/stylesheets/components"
+  # directory "app/assets/stylesheets/components"
   # copy_file "app/assets/stylesheets/utilities"
 
   append_to_file "app/assets/packs/application.js", <<-CODE
