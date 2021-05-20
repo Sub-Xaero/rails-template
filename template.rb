@@ -9,11 +9,13 @@ underscore_app_name = app_name.gsub("-", "_")
 append_to_file ".gitignore", "/.idea\n" #  Ignore IDE Files
 append_to_file ".gitignore", "/config/certs\n" # Ignore dev ssl certs
 
+installing_hotwire = yes?("Do you want to setup Hotwire?")
+
 gem 'rack-cors'
 gem 'brakeman'
 gem 'devise'
 gem 'simple_form'
-gem 'hotwire-rails'
+gem 'hotwire-rails' if installing_hotwire
 gem 'sidekiq'
 gem 'rubocop', require: false
 gem 'rubocop-rails', require: false
@@ -43,7 +45,7 @@ after_bundle do
   run "bundle install"
   run "yarn install"
 
-  rails_command('turbo:install')
+  rails_command('turbo:install') if installing_hotwire
   generate('simple_form:install --bootstrap')
 
   generate('devise:install')
@@ -125,42 +127,44 @@ after_bundle do
   
   gsub_file 'app/views/layouts/application.html.erb', "stylesheet_link_tag", "stylesheet_pack_tag"
   gsub_file 'app/views/layouts/application.html.erb', "data-turbolinks-track", "data-turbo-track"
-  copy_folder "app/views/devise"
+  directory "app/views/devise"
 
-  # Config Devise for Turbo
-  gsub_file "config/initializers/devise.rb", '# frozen_string_literal: true', ''
-  prepend_to_file "config/initializers/devise.rb", <<-CODE
-class TurboFailureApp < Devise::FailureApp
-  def respond
-    if request_format == :turbo_stream
-      redirect
-    else
-      super
+  if installing_hotwire
+    # Config Devise for Turbo
+    gsub_file "config/initializers/devise.rb", '# frozen_string_literal: true', ''
+    prepend_to_file "config/initializers/devise.rb", <<-CODE
+  class TurboFailureApp < Devise::FailureApp
+    def respond
+      if request_format == :turbo_stream
+        redirect
+      else
+        super
+      end
+    end
+
+    def skip_format?
+      %w(html turbo_stream */*).include? request_format.to_s
     end
   end
+    CODE
 
-  def skip_format?
-    %w(html turbo_stream */*).include? request_format.to_s
+    copy_file "app/controllers/turbo_controller.rb"
+    
+      gsub_file "config/initializers/devise.rb", "# config.parent_controller = 'DeviseController'", "config.parent_controller = 'TurboController'"
+      gsub_file "config/initializers/devise.rb", "# config.navigational_formats = ['*/*', :html]", "config.navigational_formats = ['*/*', :html, :turbo_stream]"
+      gsub_file "config/initializers/devise.rb", /config\.warden do.*?end/, <<-CODE
+      config.warden do |manager|
+        #   manager.intercept_401 = false
+        #   manager.default_strategies(scope: :user).unshift :some_external_strategy
+        manager.failure_app = TurboFailureApp
+      end
+      CODE
   end
-end
-  CODE
-
-  copy_file "app/controllers/turbo_controller.rb"
   copy_file "app/controllers/public_controller.rb"
   copy_file "app/controllers/admin/base_controller.rb"
   copy_file "app/controllers/admin/dashboard_controller.rb"
   copy_file "app/views/public/index.html.erb"
   copy_file "app/views/admin/dashboard/index.html.erb"
-
-  gsub_file "config/initializers/devise.rb", "# config.parent_controller = 'DeviseController'", "config.parent_controller = 'TurboController'"
-  gsub_file "config/initializers/devise.rb", "# config.navigational_formats = ['*/*', :html]", "config.navigational_formats = ['*/*', :html, :turbo_stream]"
-  gsub_file "config/initializers/devise.rb", /config\.warden do.*?end/, <<-CODE
-  config.warden do |manager|
-    #   manager.intercept_401 = false
-    #   manager.default_strategies(scope: :user).unshift :some_external_strategy
-    manager.failure_app = TurboFailureApp
-  end
-  CODE
 
   create_file "docker-compose.yml" do
     <<-CODE
