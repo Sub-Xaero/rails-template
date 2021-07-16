@@ -81,13 +81,14 @@ after_bundle do
   run "rm -rf app/javascript"
   run "rm -rf app/assets/stylesheets"
 
-  directory "app/assets/stylesheets", "app/assets/stylesheets"
-  # empty_directory('app/assets/stylesheets/config')
-  # copy_file "app/assets/stylesheets/application.scss"
-  # copy_file "app/assets/stylesheets/config/bootstrap.scss"
+  copy_file "app/assets/stylesheets/application.scss"
+  copy_file "app/assets/stylesheets/utilities.scss"
   
-  # directory "app/assets/stylesheets/components"
-  # copy_file "app/assets/stylesheets/utilities"
+  empty_directory 'app/assets/stylesheets/config'
+  copy_file "app/assets/stylesheets/config/bootstrap.scss"
+  
+  empty_directory "app/assets/stylesheets/components"
+  copy_file "app/assets/stylesheets/components/buttons.scss"
 
   append_to_file "app/assets/packs/application.js", <<-CODE
   import "bootstrap";
@@ -112,22 +113,34 @@ after_bundle do
   copy_file ".rubocop.yml"
   remove_file "config/routes.rb"
   copy_file "config/routes.rb"
+
+  insert_into_file "config/routes.rb", before: "end" do
+    <<-CODE
+    extend AdminRoutes
+    extend UserRoutes
+    extend PublicRoutes
+    CODE
+  end
+
   empty_directory "config/routes"
   copy_file "config/routes/admin_routes.rb"
   copy_file "config/routes/user_routes.rb"
   copy_file "config/routes/public_routes.rb"
+
   copy_file "config/initializers/better_errors.rb"
   copy_file "config/initializers/cors.rb"
   copy_file "config/initializers/boolean.rb"
+
   copy_file "lib/tasks/integrity.rake"
   copy_file "lib/tasks/cleanup.rake"
   copy_file "lib/tasks/scheduled.rake"
   copy_file "lib/tasks/release.rake"
+
   copy_file "app/helpers/layout_helper.rb"
   
   gsub_file 'app/views/layouts/application.html.erb', "stylesheet_link_tag", "stylesheet_pack_tag"
   gsub_file 'app/views/layouts/application.html.erb', "data-turbolinks-track", "data-turbo-track"
-  directory "app/views/devise"
+  directory "app/views/devise", "app/views/devise"
 
   if installing_hotwire
     # Config Devise for Turbo
@@ -163,6 +176,7 @@ after_bundle do
   copy_file "app/controllers/public_controller.rb"
   copy_file "app/controllers/admin/base_controller.rb"
   copy_file "app/controllers/admin/dashboard_controller.rb"
+
   copy_file "app/views/public/index.html.erb"
   copy_file "app/views/admin/dashboard/index.html.erb"
 
