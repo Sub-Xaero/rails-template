@@ -84,6 +84,10 @@ after_bundle do
   copy_file "app/assets/stylesheets/application.scss"
   copy_file "app/assets/stylesheets/utilities.scss"
   
+  copy_file "app/assets/lib/utils/notifications.ts"
+  copy_file "app/assets/lib/utils/stimulus.ts"
+  copy_file "app/assets/lib/utils/typeguards.ts"
+
   empty_directory 'app/assets/stylesheets/config'
   copy_file "app/assets/stylesheets/config/bootstrap.scss"
   
