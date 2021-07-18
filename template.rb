@@ -15,6 +15,8 @@ gem 'rack-cors'
 gem 'rack-attack'
 gem 'brakeman'
 gem 'devise'
+gem 'friendly_id'
+gem 'hashid-rails'
 gem 'simple_form'
 gem 'hotwire-rails' if installing_hotwire
 gem 'sidekiq'
