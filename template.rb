@@ -12,6 +12,7 @@ append_to_file ".gitignore", "/config/certs\n" # Ignore dev ssl certs
 installing_hotwire = yes?("Do you want to setup Hotwire?")
 
 gem 'rack-cors'
+gem 'rack-attack'
 gem 'brakeman'
 gem 'devise'
 gem 'simple_form'
@@ -134,6 +135,7 @@ after_bundle do
   copy_file "config/initializers/better_errors.rb"
   copy_file "config/initializers/cors.rb"
   copy_file "config/initializers/boolean.rb"
+  copy_file "config/initializers/rack_attack.rb"
 
   copy_file "lib/tasks/integrity.rake"
   copy_file "lib/tasks/cleanup.rake"
